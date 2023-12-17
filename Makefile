@@ -15,13 +15,14 @@
 BIN_DIR=_output/bin
 RELEASE_DIR=_output/release
 REPO_PATH=volcano.sh/volcano
-IMAGE_PREFIX=volcanosh
+IMAGE_PREFIX=192.168.3.129/kubernetes
 CRD_OPTIONS ?= "crd:crdVersions=v1,generateEmbeddedObjectMeta=true"
 CRD_OPTIONS_EXCLUDE_DESCRIPTION=${CRD_OPTIONS}",maxDescLen=0"
 CC ?= "gcc"
 SUPPORT_PLUGINS ?= "no"
 CRD_VERSION ?= v1
 BUILDX_OUTPUT_TYPE ?= "docker"
+SCHEDULER_TAG=0.0.3
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -97,6 +98,9 @@ images:
 	for name in controller-manager scheduler webhook-manager; do\
 		docker buildx build -t "${IMAGE_PREFIX}/vc-$$name:$(TAG)" . -f ./installer/dockerfile/$$name/Dockerfile --output=type=${BUILDX_OUTPUT_TYPE} --platform ${DOCKER_PLATFORMS}; \
 	done
+
+scheduler:
+	docker buildx build -t "${IMAGE_PREFIX}/vc-scheduler:$(SCHEDULER_TAG)" . -f ./installer/dockerfile/scheduler/Dockerfile --output=type=${BUILDX_OUTPUT_TYPE} --platform ${DOCKER_PLATFORMS};
 
 generate-code:
 	./hack/update-gencode.sh

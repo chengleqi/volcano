@@ -3953,6 +3953,7 @@ data:
       - name: priority
       - name: gang
         enablePreemptable: false
+      - name: dqn
       - name: conformance
     - plugins:
       - name: overcommit
@@ -4091,7 +4092,7 @@ spec:
       priorityClassName: system-cluster-critical
       containers:
         - name: volcano-scheduler
-          image: volcanosh/vc-scheduler:latest
+          image: 192.168.3.129/kubernetes/vc-scheduler:0.0.3
           args:
             - --logtostderr
             - --scheduler-conf=/volcano.scheduler/volcano-scheduler.conf
